@@ -17,7 +17,7 @@ mongoose.connect(
 
 const TaskModel = mongoose.model("Task", {
   description: { type: String, unique: true },
-  status: { type: String, default: "todo" }
+  status: { type: Boolean, default: false }
 });
 
 app.post("/create", function(req, res) {
@@ -39,8 +39,8 @@ app.post("/update", function(req, res) {
     if (err) {
       res.json({ error: err.message });
     } else {
-      if (taskToUpload.status === "todo") {
-        taskToUpload.status = "done";
+      if (taskToUpload.status === false) {
+        taskToUpload.status = true;
         taskToUpload.save(function(err, uploadedTask) {
           if (err) {
             res.json({ error: err.message });
@@ -48,8 +48,8 @@ app.post("/update", function(req, res) {
             res.json(uploadedTask);
           }
         });
-      } else if (taskToUpload.status === "done") {
-        taskToUpload.status = "todo";
+      } else if (taskToUpload.status === true) {
+        taskToUpload.status = false;
         taskToUpload.save(function(err, uploadedTask) {
           if (err) {
             res.json({ error: err.message });
