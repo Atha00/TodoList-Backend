@@ -13,7 +13,7 @@ mongoose.connect(
 ); // Import de mongoose et connection à une database
 
 const TaskModel = mongoose.model("Task", {
-  description: String,
+  description: { type: String, unique: true },
   status: { type: String, default: "todo" }
 });
 
@@ -36,7 +36,35 @@ app.post("/update", function(req, res) {
     if (err) {
       res.json({ error: err.message });
     } else {
-      res.json(taskToUpload);
+      if (taskToUpload.status === "todo") {
+        taskToUpload.status = "done";
+        taskToUpload.save(function(err, uploadedTask) {
+          if (err) {
+            res.json({ error: err.message });
+          } else {
+            res.json(uploadedTask);
+          }
+        });
+      } else if (taskToUpload.status === "done") {
+        taskToUpload.status = "todo";
+        taskToUpload.save(function(err, uploadedTask) {
+          if (err) {
+            res.json({ error: err.message });
+          } else {
+            res.json(uploadedTask);
+          }
+        });
+      }
+    }
+  });
+});
+
+app.post("/delete", function(req, res) {
+  TaskModel.deleteOne({ description: req.body.description }, function(err) {
+    if (err) {
+      res.json({ error: err.message });
+    } else {
+      res.json({ message: "This task has been deleted" });
     }
   });
 });
