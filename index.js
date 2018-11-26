@@ -17,6 +17,16 @@ const TaskModel = mongoose.model("Task", {
   status: { type: String, default: "todo" }
 });
 
+// CORS
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  next();
+});
+
 app.post("/create", function(req, res) {
   const newTask = new TaskModel(req.body);
   newTask.save(function(err, createdTask) {
