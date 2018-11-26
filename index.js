@@ -9,7 +9,7 @@ app.use(bodyParser.json()); // Import de body-parser
 const mongoose = require("mongoose");
 mongoose.connect(
   "mongodb://localhost:27017/todo-API", // process.env.MONGODB_URI ||
-  { useNewUrlParser: true }
+  { useNewUrlParser: true, useCreateIndex: true }
 ); // Import de mongoose et connection à une database
 
 const TaskModel = mongoose.model("Task", {
